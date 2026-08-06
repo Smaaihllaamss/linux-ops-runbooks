@@ -1,4 +1,4 @@
-# Runbook: Investigate an Unknown System
+# Investigate an Unknown System
 
 ## Context
 

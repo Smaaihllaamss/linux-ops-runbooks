@@ -38,3 +38,11 @@ These documents were created during hands-on lab practice: diagnosing systems in
 - Network troubleshooting (DNS, routing, iptables, subnetting)
 - systemd service management
 - MySQL replication monitoring and recovery
+
+---
+
+## Certification
+
+This repository supports my PortaOne Linux & Network Administration certification.
+
+[View certificate (PDF)](certificates/portaone-lna-certificate.pdf)

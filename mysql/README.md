@@ -28,6 +28,45 @@ mysql -u root -p helpdesk < demo_queries.sql
 # For formatted output, run queries interactively in the MySQL client.
 ````
 
+## Verifying Users and Privileges
+
+Connect from localhost (via SSH):
+
+```bash
+mysql -u helpdesk_admin -p'PasswdAdmin!2'
+mysql -u backup_user -p'PasswdBackup!3'
+```
+
+Connect from another VM on the same LAN:
+
+```bash
+mysql -u helpdesk_readonly -h 192.168.0.41 -p'PasswdReadonly!0'
+mysql -u helpdesk_agent -h 192.168.0.41 -p'PasswdAgent!1'
+```
+
+> **Note:** Passwords are shown here for lab demonstration only.
+> In production, use `.my.cnf` or environment variables — never hardcode credentials in commands or scripts.
+
+After connecting, verify access:
+
+```sql
+SHOW GRANTS;
+USE helpdesk;
+SHOW TABLES;
+```
+
+## Sample Output: Users and Privileges
+
+### helpdesk_readonly: grants and access denied
+Shows granted privileges and failed INSERT attempt — read-only restrictions enforced at table level.
+![readonly grants and access denied](screenshots/grants_readonly_access_denied.png)
+
+### SHOW GRANTS: helpdesk_admin
+![admin grants](screenshots/grants_admin.png)
+
+### SHOW GRANTS: backup_user
+![admin grants](screenshots/grants_backup_user.png)
+
 ## Backup
 
 ````bash

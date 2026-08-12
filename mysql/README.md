@@ -55,19 +55,24 @@ USE helpdesk;
 SHOW TABLES;
 ```
 
-## Sample Output: Users and Privileges
+## MySQL Configuration
 
-### helpdesk_readonly: grants and access denied
-Shows granted privileges and failed INSERT attempt — read-only restrictions enforced at table level.
-![readonly grants and access denied](screenshots/grants_readonly_access_denied.png)
+Main config: `/etc/my.cnf.d/mysql-server.cnf`
 
-### SHOW GRANTS: helpdesk_admin
-![admin grants](screenshots/grants_admin.png)
+| Parameter | Value | Notes |
+|-----------|-------|-------|
+| `innodb_buffer_pool_size` | `3G` | Set to ~75% of available RAM for InnoDB performance |
+| `secure_file_priv` | `/var/lib/mysql-files` | Restricts file import/export to a safe directory |
+| `slow_query_log` | `OFF` | Disabled by default; enable in production to detect queries exceeding `long_query_time` |
 
-### SHOW GRANTS: backup_user
-![admin grants](screenshots/grants_backup_user.png)
+## Security Notes
 
-## Backup
+After MySQL installation, `sudo mysql_secure_installation` was executed:
+- Anonymous users removed
+- Remote root login disabled
+- Test database removed
+
+## Backup and Restore
 
 ````bash
 # Run manually
@@ -76,6 +81,18 @@ bash backup.sh
 # Or schedule via cron (daily at 2:00 AM)
 0 2 * * * /path/to/backup.sh
 ````
+
+### Running the backup script
+
+Shows manual run, resulting `.sql.gz` files with timestamps, and log entries confirming success and rotation.
+
+![Backup script run](screenshots/mysqldump_backup_run.png)
+
+### Restore test
+
+Drops the `tickets` table, restores from dump, verifies all 4 tables and 20 rows are back.
+
+![Backup restore test](screenshots/mysqldump_restore_test.png)
 
 ## Files
 
@@ -87,52 +104,59 @@ bash backup.sh
 | `demo_queries.sql` | JOIN, GROUP BY, subquery examples with comments |
 | `backup.sh` | Automated backup script with 7-day rotation |
 
-## Security Notes
-
-After MySQL installation, `sudo mysql_secure_installation` was executed:
-- Anonymous users removed
-- Remote root login disabled
-- Test database removed
-
 ## Sample Output
 
 All examples run in a local VM lab environment.
 
-### All tickets with client, category, and agent
+### Sample Output: Users and Privileges
+
+#### helpdesk_readonly: grants and access denied
+Shows granted privileges and failed INSERT attempt — read-only restrictions enforced at table level.
+![readonly grants and access denied](screenshots/grants_readonly_access_denied.png)
+
+#### helpdesk_admin: grants
+![admin grants](screenshots/grants_admin.png)
+
+#### backup_user: grants
+![backup_user grants](screenshots/grants_backup_user.png)
+
+### Sample Output: Demo Queries
+
+#### All tickets with client, category, and agent
 
 Demonstrates INNER JOIN on clients and categories, LEFT JOIN on agents.
 Tickets with no assigned agent show NULL in the Agent column.
 
 ![All tickets query](screenshots/all_tickets_query.png)
 
-### Unassigned tickets
+#### Unassigned tickets
 
 Tickets with no agent allocated yet.
 Demonstrates LEFT JOIN on agents table and WHERE agent_id IS NULL filter.
 
 ![Unassigned tickets](screenshots/unassigned_tickets_query.png)
 
-### Ticket count by category
+#### Ticket count by category
 
 Ticket volume per category, busiest first.
 Demonstrates GROUP BY with COUNT. Categories with equal count are sorted alphabetically.
 
 ![Tickets by category](screenshots/tickets_by_category_query.png)
 
-### Average resolution time by priority
+#### Average resolution time by priority
 
 Shows mean resolution time per priority level. Open tickets are excluded.
 Demonstrates AVG with TIMESTAMPDIFF and GROUP BY.
 
 ![Avg resolution time](screenshots/avg_resolution_time_query.png)
 
-### Clients with at least one critical ticket
+#### Clients with at least one critical ticket
 
 Demonstrates a subquery with IN operator.
 
 ![Critical tickets clients](screenshots/critical_clients_query.png)
 
-### Open and in-progress tickets by priority
+#### Open and in-progress tickets by priority
 
 Active tickets grouped by status and sorted by priority.
 Demonstrates WHERE IN with ORDER BY on multiple columns.

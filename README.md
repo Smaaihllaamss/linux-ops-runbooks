@@ -29,8 +29,8 @@ It covers database setup, user privileges, query writing, backup, and replicatio
 |------|-------------|
 | `mysql/schema.sql` | Database schema: CREATE DATABASE, CREATE TABLE |
 | `mysql/seed.sql` | Sample data: 10 clients, 5 categories, 5 agents, 20 tickets |
-| `mysql/demo_queries.sql` | JOIN, GROUP BY, subquery examples with comments |
 | `mysql/users_and_privileges.sql` | User roles: readonly, agent, admin |
+| `mysql/demo_queries.sql` | JOIN, GROUP BY, subquery examples with comments |
 | `mysql/backup.sh` | Automated backup script with 7-day rotation |
 
 See [`mysql/README.md`](mysql/README.md) for setup instructions and sample output.

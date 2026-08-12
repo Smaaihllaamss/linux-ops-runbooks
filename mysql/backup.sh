@@ -22,7 +22,7 @@ LOG_FILE="$BACKUP_DIR/backup.log"
 mkdir -p "$BACKUP_DIR"
 
 # Run mysqldump and compress output
-mysqldump -u "$DB_USER" -p"$DB_PASS" --single-transaction --skip-lock-tables "$DB_NAME" | gzip > "$BACKUP_FILE"
+mysqldump -u "$DB_USER" -p"$DB_PASS" --single-transaction "$DB_NAME" | gzip > "$BACKUP_FILE"
 
 # Check if backup succeeded
 if [ $? -eq 0 ]; then
